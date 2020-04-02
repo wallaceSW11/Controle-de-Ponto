@@ -12,20 +12,18 @@ export default function Logon() {
   async function logar(e) {
     e.preventDefault();
 
-    try {
-      const res = await api.post('login', { login, senha })
-      console.log(res);
+    await api.post('login', { login, senha })
+      .then((response) => {
+        console.log(response.data.id);
 
+        localStorage.setItem('usuario_id', response.data.id);
+        localStorage.setItem('usuario_login', response.data.login);
 
-      // localStorage.setItem('usuario_id', res.data.id);
-      // localStorage.setItem('login', login);
-
-      history.push('horario')
-
-    } catch (err) {
-      alert('Falha no login' + err)
-    }
-
+        history.push('horario');
+      })
+      .catch((error) => {
+        alert("Falha no login. Mensagem oginal:\n" + error.response.data.message);
+      })
   }
 
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import PrivateRoute from './utils/PrivateRoute';
 
 import Logon from './pages/Logon';
 import Horario from './pages/Horario';
@@ -9,7 +10,8 @@ export default function Routes() {
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Logon} />
-        <Route path="/horario" component={Horario} />
+        {/* <Route path="/horario" component={Horario} /> */}
+        <PrivateRoute path='/horario' component={Horario} />
       </Switch>
     </BrowserRouter>
   );
