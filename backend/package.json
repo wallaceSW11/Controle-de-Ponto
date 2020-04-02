@@ -1,0 +1,23 @@
+{
+  "name": "controle-ponto",
+  "version": "1.0.0",
+  "description": "Controlar a marcação de ponto - Entrada - Almoço - Retorno - Saída",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/server.js",
+    "rollback": "knex migrate:rollback"
+  },
+  "author": "Wallace Ferreira",
+  "license": "ISC",
+  "dependencies": {
+    "celebrate": "^12.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "knex": "^0.20.13",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
