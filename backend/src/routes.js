@@ -29,11 +29,14 @@ routes.post('/horario/cadastrar', celebrate({
     authorization: Joi.string().required().label('Não foi informado o ID do usuário')
   }).unknown(),
   [Segments.BODY]: Joi.object().keys({
+	id: Joi.string().allow(''),  
     data: Joi.string().label(data_invalida),
     entrada: Joi.string().label('Hora de entrada no formato inválido. Esperado: 00:00'),
     almoco: Joi.string().allow(''),
     retorno: Joi.string().allow(''),
-    saida: Joi.string().allow('')
+    saida: Joi.string().allow(''),
+	atraso: Joi.string().allow(''),
+	hora_extra: Joi.string().allow(''),
   })
 }), HorarioController.cadastrar);
 

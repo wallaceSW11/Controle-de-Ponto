@@ -14,18 +14,14 @@ export default function Logon() {
 
     await api.post('login', { login, senha })
       .then((response) => {
-        console.log(response.data.id);
-
         localStorage.setItem('usuario_id', response.data.id);
         localStorage.setItem('usuario_login', response.data.login);
-
         history.push('horario');
       })
       .catch((error) => {
         alert("Falha no login. Mensagem oginal:\n" + error.response.data.message);
       })
   }
-
 
   return (
     <div className="login-container">

@@ -10,7 +10,6 @@ export default function Routes() {
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Logon} />
-        {/* <Route path="/horario" component={Horario} /> */}
         <PrivateRoute path='/horario' component={Horario} />
       </Switch>
     </BrowserRouter>

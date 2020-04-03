@@ -6,22 +6,29 @@ module.exports = {
     const usuario_id = req.headers.authorization;
     const data = req.headers.data;
 
-    const horarios = await connection('horario')
+    const horario = await connection('horario')
       .where('usuario_id', usuario_id)
       .andWhere('data', data)
       .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])
-      .count('id', { as: 'qt' });
+      //.count('id', { as: 'qt' });
+	  .first();
 
-    if (horarios[0].qt === 0) {
-      return res.status(400).json({ error: 'Horário não localizado.' });
-    } else {
-      return res.json(horarios);
-    }
-  },
+	if (!horario) {
+	  return res.status(400).json({ error: 'Horário não localizado.' });
+	} else {
+      return res.json(horario);
+	} 
+    },
+    //if (horarios[0].qt === 0) {
+    //  return res.status(400).json({ error: 'Horário não localizado.' });
+    //} else {
+     // return res.json(horarios);
+    //}
+  
 
   async cadastrar(req, res) {
-    const { data, entrada, almoco, retorno, saida } = req.body;
-    const usuario_id = req.headers.authorization;
+    const { data, entrada, almoco, retorno, saida, atraso, hora_extra } = req.body;
+    const usuario_id = req.headers.authorization;	
 
     try {
       const horario = await connection('horario')
@@ -39,10 +46,13 @@ module.exports = {
             'entrada': entrada,
             'almoco': almoco,
             'retorno': retorno,
-            'saida': saida
+            'saida': saida,
+			'atraso': atraso,
+			'hora_extra': hora_extra
           });
 
-        return res.json({ status: 'atualizado', 'horario': horario });
+        //return res.json({ status: 'atualizado', 'horario': horario });
+		return res.json(horario);
       }
 
     } catch (err) {
@@ -61,7 +71,9 @@ module.exports = {
           entrada,
           almoco,
           retorno,
-          saida
+          saida,
+		  atraso,
+		  hora_extra
         });
 
       const horario_cadastrado = await connection('horario')
@@ -127,4 +139,5 @@ module.exports = {
     }
   }
 }
+
 
