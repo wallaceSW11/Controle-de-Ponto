@@ -1,0 +1,49 @@
+.login-container {
+  width: 100%;
+  max-width: 1120px;
+  height: 100vh;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.login-form h1 {
+  font-size: 32px;
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.login-form form {  
+  width: 100%;
+  max-width: 350px;
+}
+.login-form input {
+  max-width: 300px;
+}
+
+.login-form span {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login-form a {
+  display: flex;
+  color: blue;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: color .5s;
+}
+
+.login-form a:hover {
+  color: red;  
+}

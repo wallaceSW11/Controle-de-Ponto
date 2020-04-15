@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api';
-
+import './styles.css';
 
 export default function Logon() {
   const [login, setLogin] = useState('');
@@ -25,26 +25,31 @@ export default function Logon() {
 
   return (
     <div className="login-container">
+
       <section className="login-form">
+
+        <h1>Controle de ponto</h1>
+
         <form onSubmit={logar}>
           <input
-            placeholder="login"
+            autoFocus
+            placeholder="Login"
             value={login}
             onChange={e => setLogin(e.target.value)}
           />
+
           <input
             type="password"
-            placeholder="senha"
+            placeholder="Senha"
             value={senha}
             onChange={e => setSenha(e.target.value)}
           />
           <button className="button" type="submit">Acessar</button>
-
-          <span>É novo por aqui ?
-          <Link className="novo-acesso" to="/novousuario">
-              Cadastre se!</Link>
-          </span>
         </form>
+        <span>É novo por aqui?
+          <Link className="novo-acesso" to="/novousuario">
+            Cadastre se!</Link>
+        </span>
       </section>
     </div>
 

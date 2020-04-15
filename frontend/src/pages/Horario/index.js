@@ -13,6 +13,7 @@ export default function Horario() {
   const [saida, setSaida] = useState('');
   const [atraso, setAtraso] = useState('');
   const [hora_extra, setHora_extra] = useState('');
+
   const history = useHistory();
 
   const login = localStorage.getItem('usuario_login');
@@ -35,7 +36,8 @@ export default function Horario() {
         setHora_extra(response.data.hora_extra);
       })
       .catch((response) => {
-        console.log('deu ruim');
+        setData(dataAtual())
+        setDataAtualizacao('Atualizado em: ' + dataAtualComHorario())
       })
   }, [entrada, usuario_id]);
 
@@ -81,7 +83,7 @@ export default function Horario() {
       }
     })
       .then((response) => {
-        setDataAtualizacao(dataAtualHorario())
+        setDataAtualizacao('Atualizado em: ' + dataAtualComHorario())
       })
       .catch((error => {
         alert('Falha ao realizar o cadastro.\n' + error.response)
@@ -93,20 +95,38 @@ export default function Horario() {
     history.push('/');
   }
 
-  function dataAtualHorario() {
-    var hoje = new Date();
-    var datacompleta = hoje.getDate() + '/' + (hoje.getMonth() + 1) + '/' + hoje.getFullYear() + ' - ' +
-      hoje.getHours() + ':' + hoje.getMinutes() + ':' + hoje.getSeconds();
-    return datacompleta;
-  }
+  // function dataAtualHorario() {
+  //   var hoje = new Date();
+  //   var datacompleta = hoje.getDate() + '/' + (hoje.getMonth() + 1) + '/' + hoje.getFullYear() + ' - ' +
+  //     hoje.getHours() + ':' + hoje.getMinutes() + ':' + hoje.getSeconds();
+  //   return datacompleta;
+  // }
 
   function dataParaConsulta() {
     const hoje = new Date()
     const ano = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(hoje)
     const mes = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(hoje)
     const dia = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(hoje)
-    var datacompleta = ano + '-' + mes + '-' + dia;
-    return datacompleta;
+    return `${ano}-${mes}-${dia}`;
+  }
+
+  function dataAtual() {
+    const hoje = new Date()
+    const ano = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(hoje)
+    const mes = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(hoje)
+    const dia = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(hoje)
+    return `${dia}/${mes}/${ano}`;
+  }
+
+  function dataAtualComHorario() {
+    const hoje = new Date()
+    const ano = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(hoje)
+    const mes = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(hoje)
+    const dia = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(hoje)
+    const hora = new Intl.DateTimeFormat('br', { hour: '2-digit' }).format(hoje)
+    const minuto = new Intl.DateTimeFormat('br', { minute: '2-digit' }).format(hoje)
+    const segundo = new Intl.DateTimeFormat('br', { second: '2-digit' }).format(hoje)
+    return `${dia}/${mes}/${ano} - ${hora}:${minuto}:${segundo}`;
   }
 
   function dataInvertida(data) {
@@ -119,26 +139,39 @@ export default function Horario() {
   return (
     <div className="horario-container">
       <header>
-        <h1>Controle de ponto</h1>
-        <button onClick={logout}>Sair</button>
-        <span>{login}</span>
+        <div className="header-titulo">
+          <h1>Controle de ponto</h1>
+        </div>
+        <div className="header-login">
+          <span>{login}</span>
+          <button onClick={logout}>Sair</button>
+        </div>
       </header>
 
-      <span id="dt">Atualizado em: {dataAtualizacao}</span>
+      <div className="dados">
+        <span>Data: {data} </span>
+        <span>{dataAtualizacao}</span>
+      </div>
 
       <div className="horario-inputs">
+
         <form onSubmit={cadastrar}>
-          <input
+
+          {/* <input
             placeholder="Data"
             value={data}
             onChange={e => setData(e.target.value)}
-          />
+            readOnly
+          /> */}
+          <label>Entrada:
           <input
-            autoFocus
-            placeholder="Entrada"
-            value={entrada}
-            onChange={e => setEntrada(e.target.value)}
-          />
+              name="horarioEntrada"
+              autoFocus
+              placeholder="Entrada"
+              value={entrada}
+              onChange={e => setEntrada(e.target.value)}
+            />
+          </label>
           <input
             placeholder="Almoço"
             value={almoco}
@@ -154,7 +187,7 @@ export default function Horario() {
             value={saida}
             onChange={e => setSaida(e.target.value)}
           />
-          <input
+          {/* <input
             placeholder="Atraso"
             value={atraso}
             onChange={e => setAtraso(e.target.value)}
@@ -163,10 +196,10 @@ export default function Horario() {
             placeholder="Hora extra"
             value={hora_extra}
             onChange={e => setHora_extra(e.target.value)}
-          />
-          <div className="horario-botao-cadastrar">
-            <button className="button">Cadastrar</button>
-          </div>
+          /> */}
+
+          <button className="button">Cadastrar</button>
+
         </form>
       </div>
     </div>

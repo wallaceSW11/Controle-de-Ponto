@@ -9,21 +9,15 @@ module.exports = {
     const horario = await connection('horario')
       .where('usuario_id', usuario_id)
       .andWhere('data', data)
-      .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])
-      //.count('id', { as: 'qt' });
+      .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])      
 	  .first();
 
 	if (!horario) {
-	  return res.status(400).json({ error: 'Horário não localizado.' });
+	  return res.status(400).json({ result: 'erro', erro: 'Horário não localizado.' });
 	} else {
       return res.json(horario);
 	} 
-    },
-    //if (horarios[0].qt === 0) {
-    //  return res.status(400).json({ error: 'Horário não localizado.' });
-    //} else {
-     // return res.json(horarios);
-    //}
+    },   
   
 
   async cadastrar(req, res) {
