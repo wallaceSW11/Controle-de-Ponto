@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api';
 import './styles.css';
+import { useEffect } from 'react';
 
 export default function Logon() {
   const [login, setLogin] = useState('');
   const [senha, setSenha] = useState('');
   const history = useHistory();
 
+  useEffect(() => {
+    if (localStorage.getItem('usuario_id')) {
+      history.push('horario');
+    }
+  })
 
   async function logar(e) {
     e.preventDefault();

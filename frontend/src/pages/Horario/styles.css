@@ -22,9 +22,12 @@
   margin-right: 5px;
 }
 
+.header-login button {
+  height: 30px;
+}
+
 .horario-container form {
   display: flex; 
-  justify-content: space-between;
   align-items: center;
   margin: 0 auto;
 }
@@ -35,12 +38,15 @@
   margin-left: 10px;  
 }
 
+.botao-cadastrar{
+  width: 120px;
+  display: flex;
+}
+
 .horario-inputs {
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
   width: 100%;
-  
 }
 
 .horario-inputs button {
@@ -52,4 +58,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.horario-inputs .button {
+ margin-left: 20px;
+ margin-top: 10px;
+}
+
+.resumo-dia {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
+  
+}
+
+.resumo-dia{
+  display: flex;
+  flex-direction: column;
 }

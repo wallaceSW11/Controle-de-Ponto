@@ -2,6 +2,37 @@ const connection = require('../database/connection');
 const generateUniqueId = require('../../utils/generateUniqueId');
 
 module.exports = {
+
+  // function calcularHoraExtraAtraso() {
+  //   const hora = almoco.substr(0, 2);
+  //   const minuto = almoco.substr(3, 2);
+  //   const hora1 = entrada.substr(0, 2);
+  //   const minuto1 = entrada.substr(3, 2);
+  //   const hora2 = saida.substr(0, 2);
+  //   const minuto2 = saida.substr(3, 2);
+  //   const hora3 = retorno.substr(0, 2);
+  //   const minuto3 = retorno.substr(3, 2);
+  //   const calc = hmh.diff(`${hora1}h ${minuto1}m`, `${hora}h ${minuto}m`);
+  //   const calc1 = hmh.diff(`${hora3}h ${minuto3}m`, `${hora2}h ${minuto2}m`);
+  //   const total = hmh.sum(calc + calc1);
+  //   const final = hmh.diff('8h 0m ', `${total.h}h ${total.m}m`);
+  //   const formatado = (!final.h ? '00' : final.h) + ':' + final.m;
+
+  //   console.log('he: ' + hora_extra + ' f: ' + formatado);
+
+  //   if (final.isNegative) {
+  //     setAtraso(formatado);
+  //     console.log('setei atraso: ' + atraso);
+
+  //   } else {
+  //     setHora_extra(formatado);
+  //     console.log('setei hora extra: ' + hora_extra + ' formatado: ' + formatado);
+  //   }
+  // }
+
+
+
+
   async consultar(req, res) {
     const usuario_id = req.headers.authorization;
     const data = req.headers.data;
@@ -9,20 +40,21 @@ module.exports = {
     const horario = await connection('horario')
       .where('usuario_id', usuario_id)
       .andWhere('data', data)
-      .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])      
-	  .first();
+      .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])
+      .first();
 
-	if (!horario) {
-	  return res.status(400).json({ result: 'erro', erro: 'Horário não localizado.' });
-	} else {
-      return res.json(horario);
-	} 
-    },   
-  
+    return res.json(horario);
+    // if (!horario) {
+    //   return res.json({ erro: 'Horário não localizado.' });
+    // } else {
+    //   return res.json(horario);
+    // }
+  },
+
 
   async cadastrar(req, res) {
-    const { data, entrada, almoco, retorno, saida, atraso, hora_extra } = req.body;
-    const usuario_id = req.headers.authorization;	
+    const { data, entrada, almoco, retorno, saida } = req.body;
+    const usuario_id = req.headers.authorization;
 
     try {
       const horario = await connection('horario')
@@ -41,16 +73,13 @@ module.exports = {
             'almoco': almoco,
             'retorno': retorno,
             'saida': saida,
-			'atraso': atraso,
-			'hora_extra': hora_extra
+            'atraso': '00:00',
+            'hora_extra': '00:00'
           });
-
-        //return res.json({ status: 'atualizado', 'horario': horario });
-		return res.json(horario);
+        return res.json(horario);
       }
-
     } catch (err) {
-      return res.json({ error: 'Falha na consulta do horário.', message: err })
+      return res.json({ error: 'Falha na consulta do horário.', message: err.message })
     }
 
     try {
@@ -66,8 +95,8 @@ module.exports = {
           almoco,
           retorno,
           saida,
-		  atraso,
-		  hora_extra
+          'atraso': '00:00',
+          'hora_extra': '00:00'
         });
 
       const horario_cadastrado = await connection('horario')
@@ -78,7 +107,7 @@ module.exports = {
       return res.json({ status: 'cadastrado', horario: horario_cadastrado });
     }
     catch (err) {
-      return res.json({ error: 'Falha no cadastro do horário.', message: err })
+      return res.json({ error: 'Falha no cadastro do horário.', message: err.message })
     }
   },
 
@@ -129,7 +158,7 @@ module.exports = {
       return res.json(relatorio);
 
     } catch (err) {
-      return res.json({ error: 'Falha na consulta do relatório.', message: err })
+      return res.json({ error: 'Falha na consulta do relatório.', message: err.message })
     }
   }
 }

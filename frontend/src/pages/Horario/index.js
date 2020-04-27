@@ -11,8 +11,8 @@ export default function Horario() {
   const [almoco, setAlmoco] = useState('');
   const [retorno, setRetorno] = useState('');
   const [saida, setSaida] = useState('');
-  const [atraso, setAtraso] = useState('');
-  const [hora_extra, setHora_extra] = useState('');
+  const [atraso, setAtraso] = useState('00:00');
+  const [hora_extra, setHora_extra] = useState('00:00');
 
   const history = useHistory();
 
@@ -36,35 +36,17 @@ export default function Horario() {
         setHora_extra(response.data.hora_extra);
       })
       .catch((response) => {
-        setData(dataAtual())
-        setDataAtualizacao('Atualizado em: ' + dataAtualComHorario())
+        setData(dataAtual());
+        setAtraso('00:00');
+        setHora_extra('00:00');
       })
   }, [entrada, usuario_id]);
 
   async function cadastrar(e) {
     e.preventDefault();
 
-    const hora = almoco.substr(0, 2);
-    const minuto = almoco.substr(3, 2);
-    const hora1 = entrada.substr(0, 2);
-    const minuto1 = entrada.substr(3, 2);
-    const hora2 = saida.substr(0, 2);
-    const minuto2 = saida.substr(3, 2);
-    const hora3 = retorno.substr(0, 2);
-    const minuto3 = retorno.substr(3, 2);
-    const calc = hmh.diff(`${hora1}h ${minuto1}m`, `${hora}h ${minuto}m`);
-    const calc1 = hmh.diff(`${hora3}h ${minuto3}m`, `${hora2}h ${minuto2}m`);
-    const total = hmh.sum(calc + calc1);
-    const final = hmh.diff('8h 0m ', `${total.h}h ${total.m}m`);
-    const formatado = (!final.h ? '00' : final.h) + ':' + final.m;
-
-    setAtraso('');
-    setHora_extra('');
-
-    if (final.isNegative) {
-      setAtraso(formatado);
-    } else {
-      setHora_extra(formatado)
+    if (!entrada) {
+      return alert('Por favor, informe o horário de entrada.')
     }
 
     const horarios = {
@@ -72,9 +54,7 @@ export default function Horario() {
       entrada,
       almoco,
       retorno,
-      saida,
-      atraso,
-      hora_extra
+      saida
     };
 
     await api.post('horario/cadastrar', horarios, {
@@ -94,13 +74,6 @@ export default function Horario() {
     localStorage.clear();
     history.push('/');
   }
-
-  // function dataAtualHorario() {
-  //   var hoje = new Date();
-  //   var datacompleta = hoje.getDate() + '/' + (hoje.getMonth() + 1) + '/' + hoje.getFullYear() + ' - ' +
-  //     hoje.getHours() + ':' + hoje.getMinutes() + ':' + hoje.getSeconds();
-  //   return datacompleta;
-  // }
 
   function dataParaConsulta() {
     const hoje = new Date()
@@ -154,24 +127,16 @@ export default function Horario() {
       </div>
 
       <div className="horario-inputs">
-
         <form onSubmit={cadastrar}>
-
-          {/* <input
-            placeholder="Data"
-            value={data}
-            onChange={e => setData(e.target.value)}
-            readOnly
-          /> */}
-          <label>Entrada:
           <input
-              name="horarioEntrada"
-              autoFocus
-              placeholder="Entrada"
-              value={entrada}
-              onChange={e => setEntrada(e.target.value)}
-            />
-          </label>
+            id="horarioEntrada"
+            name="horarioEntrada"
+            autoFocus
+            placeholder="Entrada"
+            value={entrada}
+            onChange={e => setEntrada(e.target.value)}
+          />
+
           <input
             placeholder="Almoço"
             value={almoco}
@@ -187,20 +152,21 @@ export default function Horario() {
             value={saida}
             onChange={e => setSaida(e.target.value)}
           />
-          {/* <input
-            placeholder="Atraso"
-            value={atraso}
-            onChange={e => setAtraso(e.target.value)}
-          />
-          <input
-            placeholder="Hora extra"
-            value={hora_extra}
-            onChange={e => setHora_extra(e.target.value)}
-          /> */}
 
           <button className="button">Cadastrar</button>
 
         </form>
+
+
+      </div>
+      <div className="resumo-dia">
+        <div className="hora-extra-dia">
+          <p>Hora extra: {hora_extra}</p>
+        </div>
+        <div className="atraso-dia">
+          <p>Atraso: {atraso}</p>
+        </div>
+
       </div>
     </div>
   )
