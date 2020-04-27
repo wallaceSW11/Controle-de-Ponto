@@ -109,6 +109,8 @@ export default function Horario() {
     return data.substr(8, 2) + '/' + data.substr(5, 2) + '/' + data.substr(0, 4);
   }
 
+  /*   ----- HTML ------- */
+
   return (
     <div className="horario-container">
       <header>
