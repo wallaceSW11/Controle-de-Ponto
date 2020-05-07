@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../../services/api';
 import './styles.css';
-import hmh from 'hmh';
+//import hmh from 'hmh';
 
 export default function Horario() {
   const [dataAtualizacao, setDataAtualizacao] = useState('');
