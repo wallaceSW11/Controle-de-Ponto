@@ -19,7 +19,7 @@ routes.post('/login', celebrate({
 routes.get('/horario/consultar', celebrate({
   [Segments.HEADERS]: Joi.object().keys({
     authorization: Joi.string().required().min(6).max(12).label('Não foi informado o ID do usuário.'),
-    data: Joi.string().required().label(data_invalida)
+    data: Joi.string().regex(/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/).required().label(data_invalida)
   }).unknown()
 }), HorarioController.consultar);
 
@@ -30,20 +30,18 @@ routes.post('/horario/cadastrar', celebrate({
   }).unknown(),
   [Segments.BODY]: Joi.object().keys({
     id: Joi.string().allow(''),
-    data: Joi.string().label(data_invalida),
-    entrada: Joi.string().label('Hora de entrada no formato inválido. Esperado: 00:00'),
-    almoco: Joi.string().allow(''),
-    retorno: Joi.string().allow(''),
-    saida: Joi.string().allow(''),
-    // atraso: Joi.string().allow(''),
-    // hora_extra: Joi.string().allow(''),
+    data: Joi.string().regex(/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/).label(data_invalida),
+    entrada: Joi.string().regex(/^[0-2][0-9]:[0-5][0-9]$/).label('Hora de entrada no formato inválido. Esperado: HH:MM'),
+    almoco: Joi.string().allow('').regex(/^[0-2][0-9]:[0-5][0-9]$/).label('Hora de almoço no formato inválido. Esperado: HH:MM'),
+    retorno: Joi.string().allow('').regex(/^[0-2][0-9]:[0-5][0-9]$/).label('Hora de retorno no formato inválido. Esperado: HH:MM'),
+    saida: Joi.string().allow('').regex(/^[0-2][0-9]:[0-5][0-9]$/).label('Hora de saida no formato inválido. Esperado: HH:MM'),
   })
 }), HorarioController.cadastrar);
 
 routes.post('/horario/relatorio', celebrate({
   [Segments.BODY]: Joi.object().keys({
-    data_inicial: Joi.string().required().label(data_invalida),
-    data_final: Joi.string().required().label(data_invalida),
+    data_inicial: Joi.string().required().regex(/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/).label(data_invalida),
+    data_final: Joi.string().required().regex(/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/).label(data_invalida),
     usuarios_id: Joi.array().items().allow('')
   })
 }), HorarioController.relatorio);

@@ -2,64 +2,62 @@ const connection = require('../database/connection');
 const generateUniqueId = require('../../utils/generateUniqueId');
 const horarioUtils = require('../../utils/horarioUtils');
 
+function consultarHorario(usuario_id, data) {
+  return connection('horario')
+    .where('usuario_id', usuario_id)
+    .andWhere('data', data)
+    .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])
+    .first();
+}
+
 module.exports = {
-
-
   async consultar(req, res) {
     const usuario_id = req.headers.authorization;
     const data = req.headers.data;
 
-    const horario = await connection('horario')
-      .where('usuario_id', usuario_id)
-      .andWhere('data', data)
-      .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])
-      .first();
-
-    return res.json(horario);
+    return res.json(await consultarHorario(usuario_id, data));
   },
-
 
   async cadastrar(req, res) {
     const { data, entrada, almoco, retorno, saida } = req.body;
     const usuario_id = req.headers.authorization;
 
-    const horarios = {
+    let horariosParaCadastrar = {
       entrada,
       almoco,
       retorno,
-      saida
+      saida,
+      atraso: '00:00',
+      hora_extra: '00:00'
     };
 
-    const cargaHoraria = horarioUtils.obterCargaHoraria(horarios);
-    const horaExtraCalculada = horarioUtils.obterHoraExtra(cargaHoraria);
-    const atrasoCalculado = horarioUtils.obterAtraso(cargaHoraria);
-
-    console.log('Carga horária: ' + cargaHoraria);
-    console.log('Hora Extra: ' + horaExtraCalculada);
-    console.log('Atraso: ' + atrasoCalculado);
-
+    if (!!entrada && !!almoco && !!retorno && !!saida) {
+      const cargaHoraria = horarioUtils.obterCargaHoraria(horariosParaCadastrar);
+      horariosParaCadastrar.atraso = horarioUtils.obterAtraso(cargaHoraria);
+      horariosParaCadastrar.hora_extra = horarioUtils.obterHoraExtra(cargaHoraria);
+    }
 
     try {
-      const horario = await connection('horario')
+      const horarioDoBanco = await connection('horario')
         .where({
           'usuario_id': usuario_id,
           'data': data
         })
-        .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])
-        .first();
+        .first('id', 'data');
 
-      if (horario) {
+      if (horarioDoBanco) {
         await connection('horario')
-          .where('id', '=', horario.id)
+          .where('id', '=', horarioDoBanco.id)
           .update({
-            'entrada': entrada,
-            'almoco': almoco,
-            'retorno': retorno,
-            'saida': saida,
-            'atraso': '00:00',
-            'hora_extra': '00:00'
+            entrada,
+            almoco,
+            retorno,
+            saida,
+            'atraso': horariosParaCadastrar.atraso,
+            'hora_extra': horariosParaCadastrar.hora_extra
           });
-        return res.json(horario);
+
+        return res.json(await consultarHorario(usuario_id, data));
       }
     } catch (err) {
       return res.json({ error: 'Falha na atualização do horário.', message: err.message })
@@ -78,16 +76,11 @@ module.exports = {
           almoco,
           retorno,
           saida,
-          'atraso': '00:00',
-          'hora_extra': '00:00'
+          'atraso': horariosParaCadastrar.atraso,
+          'hora_extra': horariosParaCadastrar.hora_extra
         });
 
-      const horario_cadastrado = await connection('horario')
-        .where('id', horario_id)
-        .select(['id', 'data', 'entrada', 'almoco', 'retorno', 'saida', 'atraso', 'hora_extra'])
-        .first();
-
-      return res.json({ status: 'cadastrado', horario: horario_cadastrado });
+      return res.json(await consultarHorario(usuario_id, data));
     }
     catch (err) {
       return res.json({ error: 'Falha no cadastro do horário.', message: err.message })

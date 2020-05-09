@@ -13,8 +13,14 @@ function obterHoraFormatada(horario) {
     + ':' + (horario.m.toString().length == 1 ? '0' + horario.m : horario.m);
 }
 
-function ObterHoraParaCalculo(horarioFormatado) {
+function obterHoraParaCalculo(horarioFormatado) {
   return hmh.sum('0m' + `${obterHora(horarioFormatado)}h ${obterMinuto(horarioFormatado)}m'`);
+}
+
+function obterCargaHorariaManhaEmMinutos(horarios) {
+  return cargaManha =
+    hmh.diff(`${obterHora(horarios.entrada)}h ${obterMinuto(horarios.entrada)}m`,
+      `${obterHora(horarios.almoco)}h ${obterMinuto(horarios.almoco)}m`, 'minutes');
 }
 
 // function calcularHoraExtraAtraso() {
@@ -48,10 +54,7 @@ function ObterHoraParaCalculo(horarioFormatado) {
 module.exports = {
 
   obterCargaHoraria(horarios) {
-
-    const cargaManha =
-      hmh.diff(`${obterHora(horarios.entrada)}h ${obterMinuto(horarios.entrada)}m`,
-        `${obterHora(horarios.almoco)}h ${obterMinuto(horarios.almoco)}m`, 'minutes');
+    const cargaManha = obterCargaHorariaManhaEmMinutos(horarios);
 
     const cargaTarde =
       hmh.diff(`${obterHora(horarios.retorno)}h ${obterMinuto(horarios.retorno)}m`,
@@ -59,12 +62,14 @@ module.exports = {
 
     const cargaHoraria = hmh.sum(cargaManha + cargaTarde);
 
+    this.obterPrevisaoSaida(horarios);
+
     return obterHoraFormatada(cargaHoraria);
   },
 
 
   obterHoraExtra(cargaHorariaFormatada) {
-    const cargaHoraria = ObterHoraParaCalculo(cargaHorariaFormatada);
+    const cargaHoraria = obterHoraParaCalculo(cargaHorariaFormatada);
     const diferencaMinutos = hmh.diff('8h 0m', `${cargaHoraria.h}h ${cargaHoraria.m}m`, 'minutes');
     const horaExtra = hmh.sum('0m' + diferencaMinutos);
 
@@ -76,7 +81,7 @@ module.exports = {
   },
 
   obterAtraso(cargaHorariaFormatada) {
-    const cargaHoraria = ObterHoraParaCalculo(cargaHorariaFormatada);
+    const cargaHoraria = obterHoraParaCalculo(cargaHorariaFormatada);
     const diferencaMinutos = hmh.diff('8h 0m', `${cargaHoraria.h}h ${cargaHoraria.m}m`, 'minutes');
     const atraso = hmh.sum('0m' + diferencaMinutos);
 
@@ -85,5 +90,37 @@ module.exports = {
     } else {
       return '00:00';
     }
+  },
+
+  obterPrevisaoSaida(horarios) {
+    // const [entrada, almoco, retorno] = horarios;
+    const cargaManha = hmh.sum('0m' + obterCargaHorariaManhaEmMinutos(horarios));
+
+    const m = obterHora(horarios.retorno) + 'h ' + obterMinuto(horarios.retorno) + 'm';
+    const m2 = hmh.diff('00h 00m', m);
+
+    console.log('cargaManha: ' + cargaManha);
+    console.log('min: ' + m);
+    console.log('min2: ' + m2);
+
+
+    const oi = hmh.sum(cargaManha + m);
+
+    const ola = hmh.sub(oi + '8h 0m');
+
+    console.log('oi: ' + oi);
+    console.log('ola: ' + ola);
+
+
+    //const agora = hmh.sub(cargaManha, m);
+    //console.log(agora);
+
+
+
+    //const cargaTarde = hmh.diff(cargaManha, m);
+    //console.log('carga: ' + cargaManha);
+    //console.log('cargatard: ' + cargaTarde);
+
+
   }
 }
