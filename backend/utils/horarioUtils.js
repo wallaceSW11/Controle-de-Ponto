@@ -93,34 +93,11 @@ module.exports = {
   },
 
   obterPrevisaoSaida(horarios) {
-    // const [entrada, almoco, retorno] = horarios;
-    const cargaManha = hmh.sum('0m' + obterCargaHorariaManhaEmMinutos(horarios));
+    const manha = hmh.diff(`${obterHora(horarios.entrada)}h ${obterMinuto(horarios.entrada)}m`,
+      `${obterHora(horarios.almoco)}h ${obterMinuto(horarios.almoco)}m`);
 
-    const m = obterHora(horarios.retorno) + 'h ' + obterMinuto(horarios.retorno) + 'm';
-    const m2 = hmh.diff('00h 00m', m);
+    const tarde = hmh.diff(`${obterHora(horarios.retorno)}h ${obterMinuto(horarios.retorno)}m`, '24h');
 
-    console.log('cargaManha: ' + cargaManha);
-    console.log('min: ' + m);
-    console.log('min2: ' + m2);
-
-
-    const oi = hmh.sum(cargaManha + m);
-
-    const ola = hmh.sub(oi + '8h 0m');
-
-    console.log('oi: ' + oi);
-    console.log('ola: ' + ola);
-
-
-    //const agora = hmh.sub(cargaManha, m);
-    //console.log(agora);
-
-
-
-    //const cargaTarde = hmh.diff(cargaManha, m);
-    //console.log('carga: ' + cargaManha);
-    //console.log('cargatard: ' + cargaTarde);
-
-
+    return hmh.sub('24h' + hmh.sub(' 8h ' + hmh.sum(manha + tarde)));
   }
 }

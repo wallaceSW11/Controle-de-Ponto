@@ -28,14 +28,22 @@ module.exports = {
       retorno,
       saida,
       atraso: '00:00',
-      hora_extra: '00:00'
+      hora_extra: '00:00',
+      previsao_saida: '00:00',
+      intervalo_almoco: '00:00'
     };
+
+    if (!!entrada && !!almoco && !!retorno) {
+      horariosParaCadastrar.previsao_saida = horarioUtils.obterPrevisaoSaida(horariosParaCadastrar);
+    }
 
     if (!!entrada && !!almoco && !!retorno && !!saida) {
       const cargaHoraria = horarioUtils.obterCargaHoraria(horariosParaCadastrar);
       horariosParaCadastrar.atraso = horarioUtils.obterAtraso(cargaHoraria);
       horariosParaCadastrar.hora_extra = horarioUtils.obterHoraExtra(cargaHoraria);
     }
+
+
 
     try {
       const horarioDoBanco = await connection('horario')
