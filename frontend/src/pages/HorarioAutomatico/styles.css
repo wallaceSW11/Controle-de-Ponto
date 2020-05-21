@@ -1,0 +1,87 @@
+a{
+  text-decoration: none;
+  border: 1px solid blue;
+  border-radius: 8px;
+  padding: 5px;
+  text-align: center;
+}
+
+
+/* .horario-container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.horario-container header {
+  display: flex;
+  margin-top: 0;
+  justify-content: space-between; 
+  width: 100%; 
+}
+
+.header-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-login span {
+  margin-top: 20px;
+  margin-right: 5px;
+}
+
+.header-login button {
+  height: 30px;
+}
+
+.horario-container form {
+  display: flex; 
+  align-items: center;
+  margin: 0 auto;
+}
+
+.horario-container form input{
+  width: 4rem;
+  text-align: center;
+  margin-left: 10px;  
+}
+
+.botao-cadastrar{
+  width: 120px;
+  display: flex;
+}
+
+.horario-inputs {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.horario-inputs button {
+  display: flex;  
+  margin-left: 20px;
+}
+
+.dados {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.horario-inputs .button {
+ margin-left: 20px;
+ margin-top: 10px;
+}
+
+.resumo-dia {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
+  
+}
+
+.resumo-dia{
+  display: flex;
+  flex-direction: column;
+} */

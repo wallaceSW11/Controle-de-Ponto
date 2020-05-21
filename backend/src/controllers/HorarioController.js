@@ -43,8 +43,6 @@ module.exports = {
       horariosParaCadastrar.hora_extra = horarioUtils.obterHoraExtra(cargaHoraria);
     }
 
-
-
     try {
       const horarioDoBanco = await connection('horario')
         .where({

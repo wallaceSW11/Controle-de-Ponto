@@ -11,7 +11,7 @@ export default function Logon() {
 
   useEffect(() => {
     if (localStorage.getItem('usuario_id')) {
-      history.push('horario');
+      history.push('horarioAutomatico');
     }
   })
 
@@ -22,7 +22,7 @@ export default function Logon() {
       .then((response) => {
         localStorage.setItem('usuario_id', response.data.id);
         localStorage.setItem('usuario_login', response.data.login);
-        history.push('horario');
+        history.push('horarioAutomatico');
       })
       .catch((error) => {
         alert("Falha no login. Mensagem oginal:\n" + error.response.data.message);
